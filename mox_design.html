@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOX DESIGN | Creative Portfolio</title>
+    <!-- Tailwind CSS for structural utility -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fonts: Inter for clean UI, Montserrat for bold high-impact text -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Montserrat:ital,wght@0,900;1,900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Custom Theme Variables & Figma Styles */
+        :root {
+            --color-bg: #000000; /* Pure Figma pitch-black */
+            --color-surface: #0a0a0c;
+            --color-accent: #ff5a1f; /* Premium fiery orange */
+            --color-accent-glow: rgba(255, 90, 31, 0.15);
+            --color-text: #ffffff;
+            --color-text-muted: #6e6e7a;
+            --grid-line-color: rgba(255, 255, 255, 0.04);
+        }
+
+        body {
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Architectural background grid lines simulating Figma guides */
+        .figma-grid-overlay {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .grid-vertical-line {
+            width: 1px;
+            height: 100%;
+            background-color: var(--grid-line-color);
+        }
+
+        /* Repeating custom micro dot pattern */
+        .bg-pattern {
+            background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.02) 1px, transparent 0);
+            background-size: 32px 32px;
+        }
+
+        /* Custom premium scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #000000;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--color-accent);
+            border-radius: 3px;
+        }
+
+        /* MECHANICAL PRELOADER ANIMATION (based on image_8af2c6.png frames) */
+        #loader-overlay {
+            position: fixed;
+            inset: 0;
+            background-color: #000000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .loader-wrapper {
+            position: relative;
+            width: 160px;
+            height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Precise mechanical unfolding SVG inspired by image_8af2c6.png */
+        .mox-mech-loader {
+            width: 110px;
+            height: 110px;
+            animation: globalRotation 5s infinite linear;
+        }
+
+        .mech-bar {
+            transform-origin: center;
+            animation-duration: 3s;
+            animation-iteration-count: infinite;
+            animation-timing-function: cubic-bezier(0.85, 0, 0.15, 1);
+        }
+
+        /* Frame sequence simulation: vertical bar, splitting, crossing, forming asterisk */
+        .bar-vertical { animation-name: mechVert; }
+        .bar-horizontal { animation-name: mechHoriz; }
+        .bar-diagonal-1 { animation-name: mechDiag1; }
+        .bar-diagonal-2 { animation-name: mechDiag2; }
+
+        @keyframes globalRotation {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes mechVert {
+            0%, 10% { transform: scaleY(0) scaleX(1); opacity: 0; }
+            20%, 80% { transform: scaleY(1) scaleX(1); opacity: 1; }
+            90%, 100% { transform: scaleY(0) scaleX(1); opacity: 0; }
+        }
+
+        @keyframes mechHoriz {
+            0%, 25% { transform: scaleX(0) scaleY(1); opacity: 0; }
+            35%, 80% { transform: scaleX(1) scaleY(1); opacity: 1; }
+            90%, 100% { transform: scaleX(0) scaleY(1); opacity: 0; }
+        }
+
+        @keyframes mechDiag1 {
+            0%, 45% { transform: scale(0) rotate(45deg); opacity: 0; }
+            55%, 80% { transform: scale(1) rotate(45deg); opacity: 1; }
+            90%, 100% { transform: scale(0) rotate(45deg); opacity: 0; }
+        }
+
+        @keyframes mechDiag2 {
+            0%, 55% { transform: scale(0) rotate(-45deg); opacity: 0; }
+            65%, 80% { transform: scale(1) rotate(-45deg); opacity: 1; }
+            90%, 100% { transform: scale(0) rotate(-45deg); opacity: 0; }
+        }
+
+        /* Grand Figma Display Typography */
+        .impact-text {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            text-transform: uppercase;
+            line-height: 0.85;
+            letter-spacing: -0.04em;
+        }
+
+        /* Dynamic cross rotation offsets */
+        .rotating-cross {
+            transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.05));
+        }
+
+        .cross-container:hover .rotating-cross {
+            transform: scale(1.08) rotate(180deg);
+        }
+
+        /* Seamless navigation switches */
+        .page-section {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .page-section.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Glowing interactive cards */
+        .interactive-card {
+            background-color: var(--color-surface);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .interactive-card:hover {
+            border-color: var(--color-accent);
+            box-shadow: 0 10px 40px var(--color-accent-glow);
+            transform: translateY(-4px);
+        }
+
+        /* Ambient Pointer Light Glow */
+        #interactive-glow {
+            position: fixed;
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, rgba(255, 90, 31, 0.04) 0%, rgba(0,0,0,0) 70%);
+            pointer-events: none;
+            z-index: 1;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s;
+        }
+    </style>
+</head>
+<body class="bg-pattern min-h-screen flex flex-col justify-between relative">
+
+    <!-- Figma Structural Guide Lines -->
+    <div class="figma-grid-overlay max-w-7xl mx-auto px-4 md:px-8">
+        <div class="grid-vertical-line"></div>
+        <div class="grid-vertical-line hidden md:block"></div>
+        <div class="grid-vertical-line hidden md:block"></div>
+        <div class="grid-vertical-line"></div>
+    </div>
+
+    <!-- Ambient Glow Shadow -->
+    <div id="interactive-glow"></div>
+
+    <!-- 1. DETAILED MECHANICAL LOADING SCREEN -->
+    <div id="loader-overlay">
+        <div class="loader-wrapper">
+            <svg class="mox-mech-loader" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Inner technical circular track -->
+                <circle cx="50" cy="50" r="42" stroke="rgba(255, 255, 255, 0.03)" stroke-width="1" />
+                <circle cx="50" cy="50" r="4" fill="#ff5a1f" />
+                
+                <!-- Unfolding geometric structures representing image_8af2c6.png frames -->
+                <rect class="mech-bar bar-vertical" x="48" y="10" width="4" height="80" rx="2" fill="#ffffff" />
+                <rect class="mech-bar bar-horizontal" x="10" y="48" width="80" height="4" rx="2" fill="#ffffff" />
+                <rect class="mech-bar bar-diagonal-1" x="10" y="48" width="80" height="4" rx="2" fill="#ff5a1f" />
+                <rect class="mech-bar bar-diagonal-2" x="10" y="48" width="80" height="4" rx="2" fill="#ffffff" />
+            </svg>
+        </div>
+        <div class="mt-6 tracking-[0.25em] text-xs text-neutral-400 font-bold uppercase flex items-center gap-2">
+            <span>CALIBRATING INTERACTION GRID</span>
+            <span class="inline-block w-1.5 h-1.5 rounded-full bg-[#ff5a1f] animate-ping"></span>
+        </div>
+    </div>
+
+    <!-- 2. STICKY FIGMA HEADER -->
+    <header class="sticky top-0 w-full z-40 bg-black/90 backdrop-blur-md border-b border-white/[0.04] py-5 px-6 md:px-12">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="#" onclick="switchTab('home')" class="flex items-center gap-3 group relative z-50">
+                <!-- Highly accurate mechanical vector logo -->
+                <svg class="w-9 h-9 group-hover:rotate-180 transition-transform duration-700" viewBox="0 0 100 100" fill="none">
+                    <rect x="47" y="15" width="6" height="70" rx="3" fill="#ffffff" />
+                    <rect x="15" y="47" width="70" height="6" rx="3" fill="#ffffff" />
+                    <rect x="15" y="47" width="70" height="6" rx="3" fill="#ff5a1f" transform="rotate(45 50 50)" />
+                    <rect x="15" y="47" width="70" height="6" rx="3" fill="#ffffff" transform="rotate(-45 50 50)" />
+                </svg>
+                <span class="font-black text-2xl tracking-widest text-white">MOX <span class="text-[#ff5a1f]">DESIGN</span></span>
+            </a>
+
+            <!-- Navigation Links -->
+            <nav class="hidden md:flex items-center gap-10">
+                <button onclick="switchTab('home')" class="nav-btn text-white hover:text-[#ff5a1f] font-bold text-xs tracking-[0.2em] transition-colors" data-target="home">HOME</button>
+                <button onclick="switchTab('portfolio')" class="nav-btn text-neutral-400 hover:text-[#ff5a1f] font-bold text-xs tracking-[0.2em] transition-colors" data-target="portfolio">PORTFOLIO</button>
+                <button onclick="switchTab('services')" class="nav-btn text-neutral-400 hover:text-[#ff5a1f] font-bold text-xs tracking-[0.2em] transition-colors" data-target="services">SERVICES</button>
+                <button onclick="switchTab('contact')" class="nav-btn text-neutral-400 hover:text-[#ff5a1f] font-bold text-xs tracking-[0.2em] transition-colors" data-target="contact">CONTACT</button>
+            </nav>
+
+            <!-- CTA Button -->
+            <div>
+                <button onclick="switchTab('contact')" class="bg-[#ff5a1f] hover:bg-white hover:text-black text-white text-[10px] font-black tracking-widest py-3 px-7 rounded-full transition-all transform hover:-translate-y-0.5">
+                    START PROJECT
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="flex-grow z-10 max-w-7xl mx-auto w-full px-6 md:px-12 py-16 relative">
+
+        <!-- SECTION A: HOME PAGE (Direct Visual Translation of home.jpg Layout) -->
+        <section id="home" class="page-section active">
+            
+            <!-- HERO BLOCK 1: Welcome Hero Title -->
+            <div class="min-h-[80vh] flex flex-col justify-center items-start mb-36 border-b border-white/[0.04] pb-24">
+                <div class="text-xs md:text-sm font-black text-[#ff5a1f] tracking-[0.4em] uppercase mb-6 animate-pulse">
+                    WELCOME TO
+                </div>
+                
+                <div class="flex flex-col lg:flex-row items-start lg:items-center gap-8 mt-2 w-full">
+                    <!-- Grand SVG Emblem representing the brand's iconic cross symbol -->
+                    <div class="w-28 h-28 md:w-44 md:h-44 flex-shrink-0 bg-neutral-950/80 p-5 border border-white/[0.06] rounded-3xl flex items-center justify-center relative">
+                        <div class="absolute inset-0 bg-gradient-to-tr from-[#ff5a1f]/10 to-transparent rounded-3xl"></div>
+                        <svg class="w-full h-full text-white animate-[spin_25s_linear_infinite] relative z-10" viewBox="0 0 100 100" fill="currentColor">
+                            <rect x="46" y="10" width="8" height="80" rx="4" />
+                            <rect x="10" y="46" width="80" height="8" rx="4" />
+                            <rect x="10" y="46" width="80" height="8" rx="4" transform="rotate(45 50 50)" />
+                            <rect x="10" y="46" width="80" height="8" rx="4" transform="rotate(-45 50 50)" />
+                        </svg>
+                    </div>
+
+                    <h1 class="impact-text text-6xl md:text-[8rem] text-white">
+                        MOX <br class="hidden lg:inline"><span class="text-neutral-500">DESIGN</span>
+                    </h1>
+                </div>
+
+                <p class="mt-10 text-neutral-400 text-base md:text-xl max-w-2xl font-light leading-relaxed">
+                    An elite multi-disciplinary design studio crafting high-end, award-winning visual identities, immersive systems, and digital motion graphics.
+                </p>
+
+                <div class="mt-10 flex gap-4">
+                    <button onclick="switchTab('portfolio')" class="border border-white/10 hover:border-[#ff5a1f] bg-neutral-900/40 hover:bg-[#ff5a1f]/10 text-white font-bold text-xs tracking-widest py-4 px-10 rounded-full transition-all">
+                        EXPLORE WORKS
+                    </button>
+                </div>
+            </div>
+
+            <!-- SECTION 2: A Creative Industry Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center min-h-[55vh] mb-36 border-b border-white/[0.04] pb-24 cross-container">
+                <div class="flex justify-center lg:justify-start">
+                    <!-- Rotating Cross element matching home.jpg angle 1 -->
+                    <svg class="rotating-cross w-44 h-44 md:w-72 md:h-72 text-white" viewBox="0 0 100 100" fill="currentColor" style="transform: rotate(15deg);">
+                        <rect x="46" y="10" width="8" height="80" rx="4" />
+                        <rect x="10" y="46" width="80" height="8" rx="4" />
+                        <rect x="10" y="46" width="80" height="8" rx="4" transform="rotate(45 50 50)" />
+                        <rect x="10" y="46" width="80" height="8" rx="4" transform="rotate(-45 50 50)" />
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="impact-text text-5xl md:text-8xl text-white">
+                        A CREATIVE <br><span class="text-[#ff5a1f]">INDUSTRY</span>
+                    </h2>
+                    <p class="mt-6 text-neutral-400 text-sm md:text-base max-w-md font-light leading-relaxed">
+                        Pioneering high-contrast design formulas. We build visual architecture that sets your company lightyears ahead of normal market standards.
+                    </p>
+                </div>
+            </div>
+
+            <!-- SECTION 3: BY MR. MOX Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center min-h-[55vh] mb-36 border-b border-white/[0.04] pb-24 cross-container">
+                <div class="lg:order-2 flex justify-center lg:justify-end">
+                    <!-- Rotating Cross element matching home.jpg angle 2 -->
+                    <svg class="rotating-cross w-44 h-44 md:w-72 md:h-72 text-[#ff5a1f]" viewBox="0 0 100 100" fill="currentColor" style="transform: rotate(45deg);">
+                        <rect x="46" y="10" width="8" height="80" rx="4" />
+                        <rect x="10" y="46" width="80" height="8" rx="4" />
+                        <rect x="10" y="46" width="80" height="8" rx="4" transform="rotate(45 50 50)" />
+                        <rect x="10" y="46" width="80" height="8" rx="4" transform="rotate(-45 50 50)" />
+                    </svg>
+                </div>
+                <div class="lg:order-1">
+                    <h2 class="impact-text text-5xl md:text-8xl text-white">
+                        BY <br><span class="text-neutral-400">MR. MOX</span>
+                    </h2>
+                    <p class="mt-6 text-neutral-400 text-sm md:text-base max-w-md font-light leading-relaxed">
+                        Handcrafted motion loops and visual assets designed directly by Mr. Mox, maintaining precise geometric harmony.
+                    </p>
+                </div>
+            </div>
+
+            <!-- SECTION 4: FOR MULTI MEDIA Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center min-h-[55vh] mb-36 border-b border-white/[0.04] pb-24 cross-container">
+                <div class="flex justify-center lg:justify-start">
+                    <!-- Rotating Cross element matching home.jpg angle 3 -->
+                    <svg class="rotating-cross w-44 h-44 md:w-72 md:h-72 text-white" viewBox="0 0 100 100" fill="currentColor" style="transform: rotate(-30deg);">
+                        <rect x="46" y="10" width="8" height="80" rx="4" />
+                        <rect x="10" y="46" width="80" height="8" rx="4" />
+                        <rect x="10" y="46" width="80" height="8" rx="4" transform="rotate(45 50 50)" />
+                        <rect x="10" y="46" width="80" height="8" rx="4" transform="rotate(-45 50 50)" />
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="impact-text text-5xl md:text-8xl text-[#ff5a1f]">
+                        FOR <br><span class="text-white">MULTIMEDIA</span>
+                    </h2>
+                    <p class="mt-6 text-neutral-400 text-sm md:text-base max-w-md font-light leading-relaxed">
+                        We deploy highly technical layouts built for digital screens, responsive web platforms, and large-scale interactive projections.
+                    </p>
+                </div>
+            </div>
+
+            <!-- SECTION 5: Making Any Project Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center min-h-[55vh] mb-12 cross-container">
+                <div class="lg:order-2 flex justify-center lg:justify-end">
+                    <!-- Rotating Cross element matching home.jpg angle 4 -->
+                    <svg class="rotating-cross w-44 h-44 md:w-72 md:h-72 text-white" viewBox="0 0 100 100" fill="currentColor" style="transform: rotate(60deg);">
+                        <rect x="46" y="10" width="8" height="80" rx="4" />
+                        <rect x="10" y="46" width="80" height="8" rx="4" />
+                        <rect x="10" y="46" width="80" height="8" rx="4" transform="rotate(45 50 50)" />
+                        <rect x="10" y="46" width="80" height="8" rx="4" transform="rotate(-45 50 50)" />
+                    </svg>
+                </div>
+                <div class="lg:order-1">
+                    <h2 class="impact-text text-5xl md:text-8xl text-white">
+                        MAKING ANY <br><span class="text-neutral-500">PROJECT POSSIBLE</span>
+                    </h2>
+                    <p class="mt-6 text-neutral-400 text-sm md:text-base max-w-md font-light leading-relaxed mb-8">
+                        No complexity is too great. We build customized brand languages, ultra-smooth responsive prototypes, and stunning cinematics from scratch.
+                    </p>
+                    <button onclick="switchTab('contact')" class="bg-[#ff5a1f] hover:bg-white hover:text-black text-white text-xs font-bold tracking-widest py-4 px-10 rounded-full transition-all">
+                        KICKSTART NOW
+                    </button>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- SECTION B: PORTFOLIO SHOWCASE -->
+        <section id="portfolio" class="page-section">
+            <div class="mb-16 border-b border-white/[0.04] pb-8">
+                <span class="text-xs font-black text-[#ff5a1f] tracking-[0.3em] uppercase">SELECTED WORKS</span>
+                <h2 class="impact-text text-5xl md:text-7xl text-white mt-3">CASE STUDIES</h2>
+            </div>
+
+            <!-- Modern Filter Tabs -->
+            <div class="flex flex-wrap gap-3 mb-12">
+                <button class="px-6 py-2.5 rounded-full text-[10px] font-bold tracking-widest bg-[#ff5a1f] text-white transition-all">ALL PROJECTS</button>
+                <button class="px-6 py-2.5 rounded-full text-[10px] font-bold tracking-widest bg-neutral-900 text-neutral-400 hover:text-white transition-all">BRANDING</button>
+                <button class="px-6 py-2.5 rounded-full text-[10px] font-bold tracking-widest bg-neutral-900 text-neutral-400 hover:text-white transition-all">UI/UX DESIGN</button>
+                <button class="px-6 py-2.5 rounded-full text-[10px] font-bold tracking-widest bg-neutral-900 text-neutral-400 hover:text-white transition-all">MOTION GRAPHICS</button>
+            </div>
+
+            <!-- Case Studies Layout Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                
+                <!-- Project 1 -->
+                <div class="interactive-card rounded-3xl overflow-hidden group">
+                    <div class="h-72 md:h-96 bg-neutral-950 relative overflow-hidden flex items-center justify-center border-b border-white/[0.03]">
+                        <!-- High Fidelity Abstract Representation -->
+                        <svg class="w-1/2 h-1/2 text-neutral-800 group-hover:scale-110 transition-transform duration-700" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1">
+                            <circle cx="50" cy="50" r="35" />
+                            <circle cx="50" cy="50" r="22" stroke="#ff5a1f" stroke-width="1.5" />
+                            <line x1="10" y1="50" x2="90" y2="50" stroke-dasharray="2,2" />
+                            <line x1="50" y1="10" x2="50" y2="90" stroke-dasharray="2,2" />
+                        </svg>
+                        <div class="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/40 to-transparent flex items-end p-8">
+                            <div>
+                                <span class="text-[10px] font-bold text-[#ff5a1f] tracking-widest uppercase bg-black/40 px-3 py-1 rounded-full">BRANDING / VISUAL SYSTEM</span>
+                                <h3 class="text-2xl font-black text-white mt-3">Katakito Brand Revival</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-8">
+                        <p class="text-neutral-400 text-sm font-light leading-relaxed">
+                            A clean structural rebirth of a classic brand, updated for contemporary taste with rich geometric framing and futuristic packaging schemes.
+                        </p>
+                        <button onclick="openProjectModal('Katakito Chocolate Rebranding')" class="mt-6 text-[#ff5a1f] hover:text-white text-xs font-bold tracking-widest flex items-center gap-2 transition-colors">
+                            VIEW CASE STUDY ➔
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="interactive-card rounded-3xl overflow-hidden group">
+                    <div class="h-72 md:h-96 bg-neutral-950 relative overflow-hidden flex items-center justify-center border-b border-white/[0.03]">
+                        <!-- High Fidelity Abstract Representation -->
+                        <svg class="w-1/2 h-1/2 text-neutral-800 group-hover:scale-110 transition-transform duration-700" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1">
+                            <rect x="20" y="15" width="60" height="70" rx="8" />
+                            <circle cx="50" cy="45" r="15" stroke="#ff5a1f" stroke-width="1.5" />
+                            <path d="M35 72 h30" stroke-width="2" />
+                            <path d="M40 78 h20" />
+                        </svg>
+                        <div class="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/40 to-transparent flex items-end p-8">
+                            <div>
+                                <span class="text-[10px] font-bold text-[#ff5a1f] tracking-widest uppercase bg-black/40 px-3 py-1 rounded-full">MOBILE SYSTEM UI/UX</span>
+                                <h3 class="text-2xl font-black text-white mt-3">Viboo Music Experience</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-8">
+                        <p class="text-neutral-400 text-sm font-light leading-relaxed">
+                            A dark pitch design interface for streaming audio files. Zero visual noise, precise layouts, and rich modern typography.
+                        </p>
+                        <button onclick="openProjectModal('Viboo Music Mobile App')" class="mt-6 text-[#ff5a1f] hover:text-white text-xs font-bold tracking-widest flex items-center gap-2 transition-colors">
+                            VIEW CASE STUDY ➔
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Project 3 -->
+                <div class="interactive-card rounded-3xl overflow-hidden group">
+                    <div class="h-72 md:h-96 bg-neutral-950 relative overflow-hidden flex items-center justify-center border-b border-white/[0.03]">
+                        <svg class="w-1/2 h-1/2 text-neutral-800 group-hover:scale-110 transition-transform duration-700" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1">
+                            <polygon points="50,12 92,82 8,82" />
+                            <polygon points="50,30 78,76 22,76" stroke="#ff5a1f" stroke-width="1.5" />
+                        </svg>
+                        <div class="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/40 to-transparent flex items-end p-8">
+                            <div>
+                                <span class="text-[10px] font-bold text-[#ff5a1f] tracking-widest uppercase bg-black/40 px-3 py-1 rounded-full">DIGITAL ART DIRECTION</span>
+                                <h3 class="text-2xl font-black text-white mt-3">Abdeen Heritage Space</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-8">
+                        <p class="text-neutral-400 text-sm font-light leading-relaxed">
+                            An immersive cultural tourism layout combining historical motifs with futuristic layout grids, custom interactive maps, and responsive architecture.
+                        </p>
+                        <button onclick="openProjectModal('Abdeen Palace Interactive Campaign')" class="mt-6 text-[#ff5a1f] hover:text-white text-xs font-bold tracking-widest flex items-center gap-2 transition-colors">
+                            VIEW CASE STUDY ➔
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Project 4 -->
+                <div class="interactive-card rounded-3xl overflow-hidden group">
+                    <div class="h-72 md:h-96 bg-neutral-950 relative overflow-hidden flex items-center justify-center border-b border-white/[0.03]">
+                        <svg class="w-1/2 h-1/2 text-neutral-800 group-hover:scale-110 transition-transform duration-700" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1">
+                            <path d="M15 50 Q32.5 15 50 50 T85 50" stroke-width="1.5" />
+                            <path d="M15 50 Q32.5 85 50 50 T85 50" stroke="#ff5a1f" stroke-width="1.5" />
+                        </svg>
+                        <div class="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/40 to-transparent flex items-end p-8">
+                            <div>
+                                <span class="text-[10px] font-bold text-[#ff5a1f] tracking-widest uppercase bg-black/40 px-3 py-1 rounded-full">MOTION CINEMATICS</span>
+                                <h3 class="text-2xl font-black text-white mt-3">Kinetic Geometry Loop</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-8">
+                        <p class="text-neutral-400 text-sm font-light leading-relaxed">
+                            A loop motion visual exploration, breaking geometric limits into raw digital curves and mechanical rotations.
+                        </p>
+                        <button onclick="openProjectModal('Mechanical Metamorphosis Animation')" class="mt-6 text-[#ff5a1f] hover:text-white text-xs font-bold tracking-widest flex items-center gap-2 transition-colors">
+                            VIEW CASE STUDY ➔
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION C: SERVICES / CAPABILITIES -->
+        <section id="services" class="page-section">
+            <div class="mb-16 border-b border-white/[0.04] pb-8">
+                <span class="text-xs font-black text-[#ff5a1f] tracking-[0.3em] uppercase">OUR EXPERTISE</span>
+                <h2 class="impact-text text-5xl md:text-7xl text-white mt-3">CAPABILITIES</h2>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <!-- Service 1 -->
+                <div class="interactive-card p-10 rounded-3xl flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 bg-[#ff5a1f]/10 rounded-2xl flex items-center justify-center text-[#ff5a1f] font-black text-sm mb-8">
+                            01
+                        </div>
+                        <h3 class="text-2xl font-black text-white mb-4">Branding & Art Direction</h3>
+                        <p class="text-neutral-400 text-sm font-light leading-relaxed">
+                            Developing elite typography guidelines, visual branding, custom mockups, and high-contrast system guides that represent your identity.
+                        </p>
+                    </div>
+                    <ul class="mt-10 space-y-3 text-neutral-500 text-[10px] font-bold uppercase tracking-wider border-t border-white/5 pt-8">
+                        <li>✦ Brand Guidelines</li>
+                        <li>✦ High-End Typography</li>
+                        <li>✦ Architectural Patterns</li>
+                    </ul>
+                </div>
+
+                <!-- Service 2 -->
+                <div class="interactive-card p-10 rounded-3xl border-2 border-[#ff5a1f]/50 flex flex-col justify-between relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-[#ff5a1f] text-white text-[9px] font-black tracking-widest px-5 py-1.5 uppercase rounded-bl-xl">
+                        ELITE
+                    </div>
+                    <div>
+                        <div class="w-12 h-12 bg-[#ff5a1f]/20 rounded-2xl flex items-center justify-center text-[#ff5a1f] font-black text-sm mb-8">
+                            02
+                        </div>
+                        <h3 class="text-2xl font-black text-white mb-4">UI/UX Layout Systems</h3>
+                        <p class="text-neutral-400 text-sm font-light leading-relaxed">
+                            Designing professional-grade interfaces with clean Figma precision. Zero clutter, strict grid frameworks, and ultra-smooth digital feedback loops.
+                        </p>
+                    </div>
+                    <ul class="mt-10 space-y-3 text-[#ff5a1f] text-[10px] font-bold uppercase tracking-wider border-t border-white/5 pt-8">
+                        <li>✦ Interactive Prototypes</li>
+                        <li>✦ Micro-Interaction Architecture</li>
+                        <li>✦ Dark Mode Layout Guides</li>
+                    </ul>
+                </div>
+
+                <!-- Service 3 -->
+                <div class="interactive-card p-10 rounded-3xl flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 bg-[#ff5a1f]/10 rounded-2xl flex items-center justify-center text-[#ff5a1f] font-black text-sm mb-8">
+                            03
+                        </div>
+                        <h3 class="text-2xl font-black text-white mb-4">Motion & Kinematics</h3>
+                        <p class="text-neutral-400 text-sm font-light leading-relaxed">
+                            Engineering fluid SVG paths, logo animations, and mechanical loops that communicate complex ideas into clean cinematics.
+                        </p>
+                    </div>
+                    <ul class="mt-10 space-y-3 text-neutral-500 text-[10px] font-bold uppercase tracking-wider border-t border-white/5 pt-8">
+                        <li>✦ Logo Signatures</li>
+                        <li>✦ Geometric Metamorphosis</li>
+                        <li>✦ Architectural Animation</li>
+                    </ul>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION D: CONTACT & INQUIRY -->
+        <section id="contact" class="page-section">
+            <div class="mb-16 text-center">
+                <span class="text-xs font-black text-[#ff5a1f] tracking-[0.3em] uppercase">COLLABORATION</span>
+                <h2 class="impact-text text-5xl md:text-7xl text-white mt-3">START A PROJECT</h2>
+                <p class="text-neutral-400 text-sm mt-4 max-w-md mx-auto font-light">
+                    Transmit your project brief and we'll translate it into high-fidelity design layouts.
+                </p>
+            </div>
+
+            <div class="max-w-xl mx-auto bg-neutral-950/80 p-10 rounded-[2.5rem] border border-white/[0.05] backdrop-blur-md">
+                <form id="contact-form" onsubmit="handleContactSubmit(event)" class="space-y-6">
+                    <div>
+                        <label class="block text-[10px] font-black text-neutral-400 uppercase tracking-widest mb-2">FULL NAME</label>
+                        <input type="text" required class="w-full bg-neutral-900/40 border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-[#ff5a1f] transition-all text-sm font-light" placeholder="John Doe">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-black text-neutral-400 uppercase tracking-widest mb-2">EMAIL ADDRESS</label>
+                        <input type="email" required class="w-full bg-neutral-900/40 border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-[#ff5a1f] transition-all text-sm font-light" placeholder="johndoe@example.com">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-black text-neutral-400 uppercase tracking-widest mb-2">PROJECT TYPE</label>
+                        <select class="w-full bg-neutral-900/40 border border-white/10 rounded-2xl px-5 py-4 text-neutral-300 focus:outline-none focus:border-[#ff5a1f] transition-all text-sm font-light">
+                            <option>Branding & Identity System</option>
+                            <option>Figma UI/UX Layout System</option>
+                            <option>Mechanical Motion Graphics</option>
+                            <option>Full Multi-Media Direction</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-black text-neutral-400 uppercase tracking-widest mb-2">BRIEF SPECIFICATION</label>
+                        <textarea rows="4" required class="w-full bg-neutral-900/40 border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-[#ff5a1f] transition-all text-sm font-light" placeholder="Explain the project coordinates..."></textarea>
+                    </div>
+                    <button type="submit" class="w-full bg-[#ff5a1f] hover:bg-white hover:text-black text-white font-black tracking-widest text-xs py-5 rounded-2xl transition-all">
+                        TRANSMIT SIGNAL
+                    </button>
+                </form>
+
+                <!-- Custom Success Feedback -->
+                <div id="form-success" class="hidden text-center py-10 space-y-5">
+                    <svg class="w-20 h-20 text-[#ff5a1f] mx-auto animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <h3 class="text-3xl font-black text-white">TRANSMISSION SECURED!</h3>
+                    <p class="text-neutral-400 text-sm font-light leading-relaxed">
+                        Your layout variables have been queued. Mr. Mox will evaluate your digital coordinates within 24 hours.
+                    </p>
+                    <button onclick="resetContactForm()" class="text-[10px] font-bold tracking-widest text-neutral-500 hover:text-white uppercase transition-colors pt-4 block mx-auto">
+                        SEND ANOTHER REQUEST
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 3. FIGMA FOOTER -->
+    <footer class="w-full border-t border-white/[0.04] py-10 px-6 bg-black/60 backdrop-blur-sm mt-16">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center gap-3">
+                <span class="font-black text-base tracking-widest text-white">MOX <span class="text-[#ff5a1f]">DESIGN</span></span>
+                <span class="text-neutral-700">|</span>
+                <span class="text-xs text-neutral-500 font-bold uppercase tracking-widest">EST. 2026</span>
+            </div>
+            
+            <div class="text-[10px] text-neutral-500 text-center md:text-right font-semibold uppercase tracking-widest leading-relaxed">
+                ENGINEERED WITH DESIGN-SYSTEM CODES. ALL RIGHTS RESERVED.
+            </div>
+        </div>
+    </footer>
+
+    <!-- INTERACTIVE CASE STUDY MODAL -->
+    <div id="project-modal" class="fixed inset-0 bg-black/95 backdrop-blur-md hidden items-center justify-center p-4 z-50 transition-all">
+        <div class="bg-[#0a0a0c] border border-white/10 max-w-2xl w-full rounded-[2rem] overflow-hidden shadow-2xl relative">
+            
+            <button onclick="closeProjectModal()" class="absolute top-6 right-6 text-neutral-400 hover:text-white transition-colors p-2 bg-black/40 rounded-full z-10">
+                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+
+            <!-- Header -->
+            <div class="h-52 bg-gradient-to-tr from-[#ff5a1f]/30 to-neutral-950 flex items-center justify-center p-8 relative">
+                <div class="text-center">
+                    <span class="text-[9px] font-bold text-[#ff5a1f] tracking-widest uppercase bg-black/60 px-4 py-1.5 rounded-full border border-[#ff5a1f]/20">DETAILED CASE</span>
+                    <h3 id="modal-project-title" class="text-3xl font-black text-white mt-4 uppercase tracking-wider">PROJECT ANALYSIS</h3>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="p-10 space-y-8">
+                <div>
+                    <h4 class="text-[10px] font-black text-neutral-400 uppercase tracking-widest mb-3">Project Blueprint</h4>
+                    <p class="text-neutral-300 text-sm font-light leading-relaxed">
+                        Using absolute digital structures and clean graphic layouts, we integrated custom motion vectors with rich system-level grids to establish an elegant layout standard.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-[10px] font-black text-neutral-400 uppercase tracking-widest mb-3">Asset Architecture</h4>
+                    <div class="flex flex-wrap gap-2.5">
+                        <span class="bg-neutral-900 border border-white/5 text-[9px] text-neutral-300 px-4 py-2 rounded-full font-bold uppercase tracking-wider">✦ Figma Typography Grid</span>
+                        <span class="bg-neutral-900 border border-white/5 text-[9px] text-neutral-300 px-4 py-2 rounded-full font-bold uppercase tracking-wider">✦ Adaptive CSS Layout Codes</span>
+                        <span class="bg-neutral-900 border border-white/5 text-[9px] text-neutral-300 px-4 py-2 rounded-full font-bold uppercase tracking-wider">✦ Kinetic SVG Systems</span>
+                    </div>
+                </div>
+
+                <div class="border-t border-white/5 pt-6 flex justify-between items-center">
+                    <span class="text-xs text-neutral-500 font-bold uppercase tracking-widest">Director: Mr. Mox</span>
+                    <button onclick="closeProjectModal()" class="bg-[#ff5a1f] hover:bg-white hover:text-black text-white text-xs font-bold tracking-widest py-3 px-8 rounded-full transition-all">
+                        CLOSE
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- MAIN CONTROL JAVASCRIPT -->
+    <script>
+        // Custom ambient follower light
+        const interactiveGlow = document.getElementById('interactive-glow');
+        window.addEventListener('mousemove', (e) => {
+            interactiveGlow.style.left = `${e.clientX}px`;
+            interactiveGlow.style.top = `${e.clientY}px`;
+        });
+
+        // Preloader transition delay (Showcases the clean image_8af2c6.png sequence)
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loader = document.getElementById('loader-overlay');
+                loader.style.opacity = '0';
+                loader.style.pointerEvents = 'none';
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                }, 800);
+            }, 2500); // Elegant 2.5s loaded showcase
+        });
+
+        // Tab switcher coordinate logic
+        function switchTab(tabId) {
+            const sections = document.querySelectorAll('.page-section');
+            sections.forEach(sec => {
+                sec.classList.remove('active');
+            });
+
+            const activeSec = document.getElementById(tabId);
+            if(activeSec) {
+                activeSec.classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            const navButtons = document.querySelectorAll('.nav-btn');
+            navButtons.forEach(btn => {
+                if(btn.getAttribute('data-target') === tabId) {
+                    btn.classList.add('text-white');
+                    btn.classList.remove('text-neutral-400');
+                } else {
+                    btn.classList.remove('text-white');
+                    btn.classList.add('text-neutral-400');
+                }
+            });
+        }
+
+        // Contact submission coordinate handler
+        function handleContactSubmit(e) {
+            e.preventDefault();
+            document.getElementById('contact-form').classList.add('hidden');
+            document.getElementById('form-success').classList.remove('hidden');
+        }
+
+        function resetContactForm() {
+            const form = document.getElementById('contact-form');
+            form.reset();
+            form.classList.remove('hidden');
+            document.getElementById('form-success').classList.add('hidden');
+        }
+
+        // Dynamic Modals for selected work pieces
+        function openProjectModal(title) {
+            const modal = document.getElementById('project-modal');
+            document.getElementById('modal-project-title').innerText = title;
+            modal.style.display = 'flex';
+        }
+
+        function closeProjectModal() {
+            document.getElementById('project-modal').style.display = 'none';
+        }
+    </script>
+
+</body>
+</html>
